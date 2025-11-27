@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MTG Pod Stats</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #fafafa; }
+    table { border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 8px 14px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+<h1>Pod Stats</h1>
+<div id="updated"></div>
+
+<h2>Player Records</h2>
+<div id="player-table"></div>
+
+<h2>Games</h2>
+<div id="games-table"></div>
+
+<script>
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbzq9bOpiHGIDoW5dsbx3z0DO_xUjmINeSBlkm22CwO5tOxJ-oDREL26NR5Q7zcSwY0X/exec";
+
+  async function load() {
+    const data = await fetch(ENDPOINT).then(r => r.json());
+
+    document.getElementById('updated').innerText =
+      "Last Updated: " + new Date(data.updated).toLocaleString();
+
+    renderSummary(data.summary);
+    renderGames(data.games);
+  }
+
+  function renderSummary(summary) {
+    let html = '<table><tr><th>Player</th><th>Games</th><th>Wins</th><th>Win %</th></tr>';
+    for (const p in summary) {
+      const s = summary[p];
+      html += `<tr>
+                 <td>${p}</td>
+                 <td>${s.games}</td>
+                 <td>${s.wins}</td>
+                 <td>${((s.wins / s.games) * 100).toFixed(1)}%</td>
+               </tr>`;
+    }
+    html += '</table>';
+    document.getElementById('player-table').innerHTML = html;
+  }
+
+  function renderGames(games) {
+    let html = '<table><tr>';
+    if (games.length) {
+      Object.keys(games[0]).forEach(h => html += `<th>${h}</th>`);
+      html += '</tr>';
+
+      games.forEach(g => {
+        html += '<tr>';
+        Object.values(g).forEach(v => html += `<td>${v}</td>`);
+        html += '</tr>';
+      });
+    }
+    html += '</table>';
+    document.getElementById('games-table').innerHTML = html;
+  }
+
+  load();
+</script>
+
+</body>
+</html>
