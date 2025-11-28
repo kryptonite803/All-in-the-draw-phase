@@ -22,7 +22,7 @@
 
 <script>
   const ENDPOINT = "https://script.google.com/macros/s/AKfycbzq9bOpiHGIDoW5dsbx3z0DO_xUjmINeSBlkm22CwO5tOxJ-oDREL26NR5Q7zcSwY0X/exec";
-
+/*
   async function load() {
     try {
       const res = await fetch(ENDPOINT);
@@ -34,7 +34,8 @@
       document.getElementById("player-table").innerText = "Error loading data: " + err.message;
       }
 }
-
+*/
+  
   function renderSummary(summary) {
     let html = '<table><tr><th>Player</th><th>Games</th><th>Wins</th><th>Win %</th></tr>';
     for (const p in summary) {
