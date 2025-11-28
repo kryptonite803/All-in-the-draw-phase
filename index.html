@@ -24,13 +24,17 @@
   const ENDPOINT = "https://script.google.com/macros/s/AKfycbzq9bOpiHGIDoW5dsbx3z0DO_xUjmINeSBlkm22CwO5tOxJ-oDREL26NR5Q7zcSwY0X/exec";
 
   async function load() {
-    const data = await fetch(ENDPOINT).then(r => r.json());
+    try {
+      const res = await fetch(ENDPOINT);
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Endpoint returned bad data");
+      renderSummary(data.summary);
+      renderGames(data.games);
+    } catch (err) {
+      document.getElementById("player-table").innerText = "Error loading data: " + err.message;
+      }
+}
 
-    document.getElementById('updated').innerText =
-      "Last Updated: " + new Date(data.updated).toLocaleString();
-
-    renderSummary(data.summary);
-    renderGames(data.games);
   }
 
   function renderSummary(summary) {
